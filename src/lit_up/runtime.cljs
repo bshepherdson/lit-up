@@ -1,9 +1,15 @@
-(ns lit-html.runtime
+(ns lit-up.runtime
   (:require
-    ["lit-html/lib/default-template-processor" :refer [defaultTemplateProcessor]]
-    ["lit-html/lib/directive" :as directive]
-    ["lit-html/lib/render" :as lit]
-    ["lit-html/lib/template-result" :refer [TemplateResult]]
+    [clojure.string :as string]
+    [lit-html :as lit]
+    ;[lit-html.lib.render :as lit]
+    ;[lit-html.lib.directive :as directive]
+    ;[lit-html.lib.default-template-processor :refer [defaultTemplateProcessor]]
+    ;[lit-html.lib.template-result :refer [TemplateResult]]
+    ;["lit-html/lib/default-template-processor" :refer [defaultTemplateProcessor]]
+    ;["lit-html/lib/directive" :as directive]
+    ;["lit-html/lib/render" :as lit]
+    ;["lit-html/lib/template-result" :refer [TemplateResult]]
     ))
 
 (extend-type array
@@ -12,8 +18,8 @@
     (.push coll o)
     coll))
 
-(def directive directive/directive)
-(def directive? directive/isDirective)
+(def directive lit/directive)
+(def directive? lit/isDirective)
 
 ; Basic design:
 ; - lit-html is designed to split a template string with interpolations into the
@@ -35,7 +41,10 @@
   "Interprets a seq of strings and other values as a template for efficient
   rendering and updating by lit-html."
   [strings values]
-  (TemplateResult. strings values "html" defaultTemplateProcessor))
+  (when (not= (count values) (dec (count strings)))
+    (throw (js/Error. (str "Can't happen: template with " (count strings)
+                           " strings and " (count values) " values."))))
+  (lit/TemplateResult. strings values "html" lit/defaultTemplateProcessor))
 
 
 (defn render
@@ -43,4 +52,14 @@
    (render result container nil))
   ([result container options]
    (lit/render result container options)))
+
+(defn class-map
+  "Given a map of class names (or keyworded class names) to expressions, returns
+  a space-separated string of the classes with truthy expressions."
+  [classes]
+  (let [matches (map first (filter second classes))]
+    (string/join " " (for [cls matches]
+                       (if (keyword? cls)
+                         (name cls)
+                         cls)))))
 

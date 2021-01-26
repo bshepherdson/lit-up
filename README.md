@@ -4,7 +4,8 @@ This is a ClojureScript library which wraps the
 [lit-html](https://https://lit-html.polymer-project.org/) project with a
 compiler for [Hiccup](https://github.com/weavejester/hiccup)-like syntax.
 
-It's alpha-quality - it seems to work but it's not been battle-tested.
+Alpha-quality! It works nicely in a nontrivial app, but that app is not launched
+so it's hardly been battle-tested.
 
 ## Overview
 
@@ -83,6 +84,6 @@ To create a production build run:
 
 ## License
 
-Copyright © 2020 Braden Shepherdson
+Copyright © 2021 Braden Shepherdson
 
 Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
